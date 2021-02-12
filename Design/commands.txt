@@ -1,0 +1,31 @@
+==================Certificates for https========================
+Copy the elementcerts folder to E:\dev\aether-host-files\LocalWorkstations
+When the alpine command is executed (cp -r /host_mnt/e/dev/aether-host-files/LocalWorkstations/* /data/) it will pick up the elements app web certificates.
+
+*** PLS DELETE certs from github repo once you have cloned *****
+
+Docker build:
+docker build --rm --build-arg IMAGE_BUILD_TIMESTAMP="%date% %time%" -t fhirfactory/pegacorn-communicate-app-web:1.0.0-snapshot --file Dockerfile .
+
+Helm install:
+\helm\helm upgrade pegacorn-communicate-web-site-a --install --namespace site-a --set serviceName="pegacorn-communicate-web",basePort=30890,hostPathKey="/data/elementcerts",hostPathCert="/data/elementcerts",imageTag=1.0.0-snapshot,numOfPods=1 helm
+
+Browse to website - confirm padlock key shows it is secure.
+https://pegacorn-communicate-web.site-a:30890
+*** CONFIGURE SYNAPSE SERVER IN KUBERNETES TO CONNECT TO THE PEGACORN ROOMSERVER
+
+=================== SCAN SUMMARY ========================
+trivy:
+fhirfactory/pegacorn-communicate-app-web:1.0.0-snapshot (alpine 3.12.3)
+===========================================================
+Total: 0 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0)
+
+dockle:
+WARN    - CIS-DI-0001: Create a user for the container
+        * Last user should not be root
+INFO    - CIS-DI-0005: Enable Content trust for Docker
+        * export DOCKER_CONTENT_TRUST=1 before docker pull/build
+INFO    - CIS-DI-0006: Add HEALTHCHECK instruction to the container image
+        * not found HEALTHCHECK statement
+
+NO ISSUES DETECTED - IMAGE STATUS OK.

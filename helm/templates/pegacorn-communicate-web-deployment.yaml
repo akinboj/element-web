@@ -84,7 +84,7 @@ spec:
         resources:
           limits:
             memory: "2048Mi"
-        image: {{ .Values.dockerRepo }}pegacorn-communicate-web-2:{{ .Values.imageTag }}            
+        image: {{ .Values.dockerRepo }}fhirfactory/pegacorn-communicate-app-web:{{ .Values.imageTag }}            
         imagePullPolicy: IfNotPresent
         name: synapse
         ports:
