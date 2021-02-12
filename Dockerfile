@@ -1,5 +1,5 @@
 # Builder
-FROM node:12 as builder
+FROM fhirfactory/pegacorn-base-communicate-app-web:1.0.0 as builder
 
 # Support custom branches of the react-sdk and js-sdk. This also helps us build
 # images of riot-web develop.
@@ -8,19 +8,6 @@ FROM node:12 as builder
 # ARG REACT_SDK_BRANCH="master"
 # ARG JS_SDK_REPO="https://github.com/matrix-org/matrix-js-sdk.git"
 # ARG JS_SDK_BRANCH="master"
-
-RUN apt-get update \
-	&& apt-get install -y --allow-unauthenticated \
-	git \ 
-	dos2unix \
-	# These packages are required for building Canvas on architectures like Arm
-	# See https://www.npmjs.com/package/canvas#compiling
-  	build-essential \ 
-  	libcairo2-dev \ 
-  	libpango1.0-dev \ 
-  	libjpeg-dev \ 
-  	libgif-dev \ 
-  	librsvg2-dev
 
 WORKDIR /src
 
@@ -42,8 +29,8 @@ RUN yarn --network-timeout=100000 install
 RUN cd ../
 
 RUN cd matrix-react-sdk-develop
-# RUN yarn link
-RUN yarn link riot-web
+#RUN yarn link
+RUN yarn link element-web
 RUN yarn --network-timeout=100000 install
 RUN cd ../
 
@@ -54,8 +41,12 @@ RUN yarn build
 RUN cp /src/config.json /src/webapp/config.json
 
 # Ensure we populate the version file
-RUN dos2unix /src/scripts/docker-write-version.sh && bash /src/scripts/docker-write-version.sh
+# RUN dos2unix /src/scripts/docker-write-version.sh && bash /src/scripts/docker-write-version.sh
 
+# Date-time build argument
+ARG IMAGE_BUILD_TIMESTAMP
+ENV IMAGE_BUILD_TIMESTAMP=${IMAGE_BUILD_TIMESTAMP}
+RUN echo IMAGE_BUILD_TIMESTAMP=${IMAGE_BUILD_TIMESTAMP}
 
 # App
 FROM nginx:alpine
