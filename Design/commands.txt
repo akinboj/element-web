@@ -2,8 +2,6 @@
 Copy the elementcerts folder to E:\dev\aether-host-files\LocalWorkstations
 When the alpine command is executed (cp -r /host_mnt/e/dev/aether-host-files/LocalWorkstations/* /data/) it will pick up the elements app web certificates.
 
-*** PLS DELETE certs from github repo once you have cloned *****
-
 Docker build:
 docker build --rm --build-arg IMAGE_BUILD_TIMESTAMP="%date% %time%" -t fhirfactory/pegacorn-communicate-app-web:1.0.0-snapshot --file Dockerfile .
 
